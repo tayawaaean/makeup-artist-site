@@ -1,6 +1,7 @@
 "use server";
 
 import { revalidatePath } from "next/cache";
+import { createAdminClient } from "@/lib/supabase/admin";
 
 export async function createTestimonial(data: {
   client_name: string;
@@ -10,7 +11,9 @@ export async function createTestimonial(data: {
   is_featured?: boolean;
   is_published?: boolean;
 }) {
-  console.log("[MOCK] createTestimonial:", data);
+  const supabase = createAdminClient();
+  const { error } = await supabase.from("testimonials").insert(data);
+  if (error) throw error;
   revalidatePath("/");
   revalidatePath("/admin/testimonials");
 }
@@ -26,13 +29,17 @@ export async function updateTestimonial(
     is_published?: boolean;
   }
 ) {
-  console.log("[MOCK] updateTestimonial:", id, data);
+  const supabase = createAdminClient();
+  const { error } = await supabase.from("testimonials").update(data).eq("id", id);
+  if (error) throw error;
   revalidatePath("/");
   revalidatePath("/admin/testimonials");
 }
 
 export async function deleteTestimonial(id: string) {
-  console.log("[MOCK] deleteTestimonial:", id);
+  const supabase = createAdminClient();
+  const { error } = await supabase.from("testimonials").delete().eq("id", id);
+  if (error) throw error;
   revalidatePath("/");
   revalidatePath("/admin/testimonials");
 }

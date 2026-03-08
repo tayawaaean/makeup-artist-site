@@ -2,7 +2,6 @@
 
 import { useState } from "react";
 import { toast } from "sonner";
-import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import {
   Table, TableBody, TableCell, TableHead, TableHeader, TableRow,
@@ -14,7 +13,7 @@ import {
   AlertDialog, AlertDialogAction, AlertDialogCancel, AlertDialogContent,
   AlertDialogDescription, AlertDialogFooter, AlertDialogHeader, AlertDialogTitle,
 } from "@/components/ui/alert-dialog";
-import { MoreHorizontal, Plus } from "lucide-react";
+import { MoreHorizontal } from "lucide-react";
 import { PortfolioForm } from "@/components/admin/portfolio-form";
 import { deletePortfolioItem, togglePortfolioPublish } from "@/lib/actions/portfolio";
 import { PortfolioItem } from "@/types/database";
@@ -57,9 +56,12 @@ export function PortfolioManager({ initialItems }: { initialItems: PortfolioItem
     <div className="space-y-6">
       <div className="flex items-center justify-between">
         <h1 className="text-3xl font-bold tracking-tight">Portfolio</h1>
-        <Button onClick={() => { setEditItem(null); setFormOpen(true); }}>
-          <Plus className="mr-2 h-4 w-4" /> Add New
-        </Button>
+        <button
+          onClick={() => { setEditItem(null); setFormOpen(true); }}
+          className="inline-flex items-center gap-1.5 rounded-lg bg-primary px-3 py-1.5 text-sm font-medium text-primary-foreground hover:bg-primary/90"
+        >
+          + Add New
+        </button>
       </div>
 
       <div className="rounded-md border bg-white">
@@ -95,10 +97,8 @@ export function PortfolioManager({ initialItems }: { initialItems: PortfolioItem
                   <TableCell>{item.display_order}</TableCell>
                   <TableCell>
                     <DropdownMenu>
-                      <DropdownMenuTrigger>
-                        <Button variant="ghost" size="icon">
-                          <MoreHorizontal className="h-4 w-4" />
-                        </Button>
+                      <DropdownMenuTrigger className="inline-flex size-8 items-center justify-center rounded-lg hover:bg-muted">
+                        <MoreHorizontal className="h-4 w-4" />
                       </DropdownMenuTrigger>
                       <DropdownMenuContent align="end">
                         <DropdownMenuItem onClick={() => handleEdit(item)}>

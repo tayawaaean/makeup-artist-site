@@ -1,23 +1,48 @@
 import { PortfolioItem } from "@/types/database";
-import { mockPortfolioItems } from "@/lib/mock-data";
+import { createServerSupabaseClient } from "@/lib/supabase/server";
+import { createAdminClient } from "@/lib/supabase/admin";
 
 export async function getPublishedPortfolioItems(): Promise<PortfolioItem[]> {
-  return mockPortfolioItems
-    .filter((item) => item.is_published)
-    .sort((a, b) => a.display_order - b.display_order);
+  const supabase = await createServerSupabaseClient();
+  const { data, error } = await supabase
+    .from("portfolio_items")
+    .select("*")
+    .eq("is_published", true)
+    .order("display_order");
+  if (error) throw error;
+  return (data ?? []) as PortfolioItem[];
 }
 
 export async function getFeaturedPortfolioItems(): Promise<PortfolioItem[]> {
-  return mockPortfolioItems
-    .filter((item) => item.is_published && item.is_featured)
-    .sort((a, b) => a.display_order - b.display_order)
-    .slice(0, 6);
+  const supabase = await createServerSupabaseClient();
+  const { data, error } = await supabase
+    .from("portfolio_items")
+    .select("*")
+    .eq("is_published", true)
+    .eq("is_featured", true)
+    .order("display_order")
+    .limit(6);
+  if (error) throw error;
+  return (data ?? []) as PortfolioItem[];
 }
 
 export async function getPortfolioItemBySlug(slug: string): Promise<PortfolioItem | null> {
-  return mockPortfolioItems.find((item) => item.slug === slug && item.is_published) || null;
+  const supabase = await createServerSupabaseClient();
+  const { data } = await supabase
+    .from("portfolio_items")
+    .select("*")
+    .eq("slug", slug)
+    .eq("is_published", true)
+    .single();
+  return (data ?? null) as PortfolioItem | null;
 }
 
 export async function getAllPortfolioItems(): Promise<PortfolioItem[]> {
-  return mockPortfolioItems.sort((a, b) => a.display_order - b.display_order);
+  const supabase = createAdminClient();
+  const { data, error } = await supabase
+    .from("portfolio_items")
+    .select("*")
+    .order("display_order");
+  if (error) throw error;
+  return (data ?? []) as PortfolioItem[];
 }

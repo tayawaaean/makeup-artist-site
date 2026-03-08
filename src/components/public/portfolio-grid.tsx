@@ -13,7 +13,6 @@ export function PortfolioGrid({ items }: PortfolioGridProps) {
   return (
     <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
       {items.map((item, index) => {
-        // First item spans 2 rows for editorial feel
         const isFeature = index === 0;
         return (
           <motion.div
@@ -29,12 +28,13 @@ export function PortfolioGrid({ items }: PortfolioGridProps) {
             className={isFeature ? "sm:row-span-2" : ""}
           >
             <Link href={`/portfolio/${item.slug}`} className="group block h-full">
-              <div className={`relative overflow-hidden bg-[#E7E0D8] ${isFeature ? "aspect-[3/5]" : "aspect-[4/5]"} h-full`}>
+              <div className={`relative overflow-hidden bg-[#E7E0D8] ${isFeature ? "aspect-[4/5] sm:aspect-auto sm:h-full" : "aspect-[4/5]"}`}>
                 {item.cover_image_url ? (
                   <Image
                     src={item.cover_image_url}
                     alt={item.title}
                     fill
+                    sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 33vw"
                     className="object-cover transition-transform duration-[1.2s] ease-out group-hover:scale-[1.03]"
                   />
                 ) : (

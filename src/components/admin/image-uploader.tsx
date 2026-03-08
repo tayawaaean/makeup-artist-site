@@ -43,7 +43,7 @@ export function ImageUploader({ currentImageUrl, onFileSelect, label = "Upload I
     <div className="space-y-2">
       <label className="text-sm font-medium">{label}</label>
       {preview ? (
-        <div className="relative aspect-video w-full max-w-sm overflow-hidden rounded-lg border">
+        <div className="relative aspect-[4/5] w-full max-w-xs overflow-hidden rounded-lg border">
           <Image src={preview} alt="Preview" fill className="object-cover" />
           <Button
             type="button"

@@ -1,5 +1,7 @@
 import Link from "next/link";
 import { getAllPortfolioItems } from "@/lib/queries/portfolio";
+
+export const dynamic = 'force-dynamic';
 import { getAllServices } from "@/lib/queries/services";
 import { getAllTestimonials } from "@/lib/queries/testimonials";
 import { getAllInquiries, getNewInquiryCount } from "@/lib/queries/inquiries";

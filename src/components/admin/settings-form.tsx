@@ -8,7 +8,7 @@ import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { Label } from "@/components/ui/label";
 import { ImageUploader } from "./image-uploader";
-import { uploadImage } from "@/lib/supabase/storage";
+import { uploadImageAction } from "@/lib/actions/upload";
 import { updateSettings } from "@/lib/actions/settings";
 
 interface SettingsFormProps {
@@ -32,11 +32,17 @@ export function SettingsForm({ initialSettings }: SettingsFormProps) {
 
       if (heroImageFile) {
         const path = `settings/hero.${heroImageFile.name.split(".").pop()}`;
-        updates.hero_image = await uploadImage(heroImageFile, path);
+        const fd = new FormData();
+        fd.append("file", heroImageFile);
+        fd.append("path", path);
+        updates.hero_image = await uploadImageAction(fd);
       }
       if (aboutImageFile) {
         const path = `settings/about.${aboutImageFile.name.split(".").pop()}`;
-        updates.about_image = await uploadImage(aboutImageFile, path);
+        const fd = new FormData();
+        fd.append("file", aboutImageFile);
+        fd.append("path", path);
+        updates.about_image = await uploadImageAction(fd);
       }
 
       await updateSettings(updates);

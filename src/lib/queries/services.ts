@@ -1,12 +1,24 @@
 import { Service } from "@/types/database";
-import { mockServices } from "@/lib/mock-data";
+import { createServerSupabaseClient } from "@/lib/supabase/server";
+import { createAdminClient } from "@/lib/supabase/admin";
 
 export async function getActiveServices(): Promise<Service[]> {
-  return mockServices
-    .filter((s) => s.is_active)
-    .sort((a, b) => a.display_order - b.display_order);
+  const supabase = await createServerSupabaseClient();
+  const { data, error } = await supabase
+    .from("services")
+    .select("*")
+    .eq("is_active", true)
+    .order("display_order");
+  if (error) throw error;
+  return (data ?? []) as Service[];
 }
 
 export async function getAllServices(): Promise<Service[]> {
-  return mockServices.sort((a, b) => a.display_order - b.display_order);
+  const supabase = createAdminClient();
+  const { data, error } = await supabase
+    .from("services")
+    .select("*")
+    .order("display_order");
+  if (error) throw error;
+  return (data ?? []) as Service[];
 }

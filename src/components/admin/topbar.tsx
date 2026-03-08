@@ -2,7 +2,6 @@
 
 import { useState } from "react";
 import { Menu } from "lucide-react";
-import { Button } from "@/components/ui/button";
 import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet";
 import { Sidebar } from "./sidebar";
 
@@ -12,10 +11,8 @@ export function Topbar() {
   return (
     <div className="flex items-center gap-4 border-b bg-white px-4 py-3 lg:hidden">
       <Sheet open={open} onOpenChange={setOpen}>
-        <SheetTrigger>
-          <Button variant="ghost" size="icon">
-            <Menu className="h-5 w-5" />
-          </Button>
+        <SheetTrigger className="inline-flex size-8 items-center justify-center rounded-lg hover:bg-muted">
+          <Menu className="h-5 w-5" />
         </SheetTrigger>
         <SheetContent side="left" className="w-64 p-0">
           <Sidebar onNavigate={() => setOpen(false)} />

@@ -1,6 +1,7 @@
 "use server";
 
 import { revalidatePath } from "next/cache";
+import { createAdminClient } from "@/lib/supabase/admin";
 
 export async function createPortfolioItem(data: {
   title: string;
@@ -12,7 +13,9 @@ export async function createPortfolioItem(data: {
   is_published?: boolean;
   display_order?: number;
 }) {
-  console.log("[MOCK] createPortfolioItem:", data);
+  const supabase = createAdminClient();
+  const { error } = await supabase.from("portfolio_items").insert(data);
+  if (error) throw error;
   revalidatePath("/portfolio");
   revalidatePath("/");
   revalidatePath("/admin/portfolio");
@@ -31,21 +34,30 @@ export async function updatePortfolioItem(
     display_order?: number;
   }
 ) {
-  console.log("[MOCK] updatePortfolioItem:", id, data);
+  const supabase = createAdminClient();
+  const { error } = await supabase.from("portfolio_items").update(data).eq("id", id);
+  if (error) throw error;
   revalidatePath("/portfolio");
   revalidatePath("/");
   revalidatePath("/admin/portfolio");
 }
 
 export async function deletePortfolioItem(id: string) {
-  console.log("[MOCK] deletePortfolioItem:", id);
+  const supabase = createAdminClient();
+  const { error } = await supabase.from("portfolio_items").delete().eq("id", id);
+  if (error) throw error;
   revalidatePath("/portfolio");
   revalidatePath("/");
   revalidatePath("/admin/portfolio");
 }
 
 export async function togglePortfolioPublish(id: string, isPublished: boolean) {
-  console.log("[MOCK] togglePortfolioPublish:", id, !isPublished);
+  const supabase = createAdminClient();
+  const { error } = await supabase
+    .from("portfolio_items")
+    .update({ is_published: !isPublished })
+    .eq("id", id);
+  if (error) throw error;
   revalidatePath("/portfolio");
   revalidatePath("/");
   revalidatePath("/admin/portfolio");

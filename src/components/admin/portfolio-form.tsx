@@ -13,7 +13,7 @@ import { Label } from "@/components/ui/label";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Switch } from "@/components/ui/switch";
 import { ImageUploader } from "./image-uploader";
-import { uploadImage } from "@/lib/supabase/storage";
+import { uploadImageAction } from "@/lib/actions/upload";
 import { createPortfolioItem, updatePortfolioItem } from "@/lib/actions/portfolio";
 import { PortfolioItem } from "@/types/database";
 
@@ -57,7 +57,10 @@ export function PortfolioForm({ open, onOpenChange, editItem }: PortfolioFormPro
 
       if (coverFile) {
         const path = `portfolio/${Date.now()}/cover.${coverFile.name.split(".").pop()}`;
-        coverUrl = await uploadImage(coverFile, path);
+        const fd = new FormData();
+        fd.append("file", coverFile);
+        fd.append("path", path);
+        coverUrl = await uploadImageAction(fd);
       }
 
       if (editItem) {
@@ -70,8 +73,8 @@ export function PortfolioForm({ open, onOpenChange, editItem }: PortfolioFormPro
       onOpenChange(false);
       form.reset();
       setCoverFile(null);
-    } catch {
-      toast.error("Something went wrong");
+    } catch (err) {
+      toast.error(err instanceof Error ? err.message : "Something went wrong");
     } finally {
       setLoading(false);
     }

@@ -1,6 +1,7 @@
 "use server";
 
 import { revalidatePath } from "next/cache";
+import { createAdminClient } from "@/lib/supabase/admin";
 
 export async function createService(data: {
   name: string;
@@ -12,7 +13,9 @@ export async function createService(data: {
   display_order?: number;
   is_active?: boolean;
 }) {
-  console.log("[MOCK] createService:", data);
+  const supabase = createAdminClient();
+  const { error } = await supabase.from("services").insert(data);
+  if (error) throw error;
   revalidatePath("/services");
   revalidatePath("/");
   revalidatePath("/admin/services");
@@ -31,14 +34,18 @@ export async function updateService(
     is_active?: boolean;
   }
 ) {
-  console.log("[MOCK] updateService:", id, data);
+  const supabase = createAdminClient();
+  const { error } = await supabase.from("services").update(data).eq("id", id);
+  if (error) throw error;
   revalidatePath("/services");
   revalidatePath("/");
   revalidatePath("/admin/services");
 }
 
 export async function deleteService(id: string) {
-  console.log("[MOCK] deleteService:", id);
+  const supabase = createAdminClient();
+  const { error } = await supabase.from("services").delete().eq("id", id);
+  if (error) throw error;
   revalidatePath("/services");
   revalidatePath("/");
   revalidatePath("/admin/services");

@@ -1,12 +1,22 @@
 import { Inquiry } from "@/types/database";
-import { mockInquiries } from "@/lib/mock-data";
+import { createAdminClient } from "@/lib/supabase/admin";
 
 export async function getAllInquiries(): Promise<Inquiry[]> {
-  return [...mockInquiries].sort(
-    (a, b) => new Date(b.created_at).getTime() - new Date(a.created_at).getTime()
-  );
+  const supabase = createAdminClient();
+  const { data, error } = await supabase
+    .from("inquiries")
+    .select("*")
+    .order("created_at", { ascending: false });
+  if (error) throw error;
+  return (data ?? []) as Inquiry[];
 }
 
 export async function getNewInquiryCount(): Promise<number> {
-  return mockInquiries.filter((i) => i.status === "new").length;
+  const supabase = createAdminClient();
+  const { count, error } = await supabase
+    .from("inquiries")
+    .select("*", { count: "exact", head: true })
+    .eq("status", "new");
+  if (error) return 0;
+  return count ?? 0;
 }

@@ -62,6 +62,12 @@ export function Navbar() {
               {link.label}
             </Link>
           ))}
+          <Link
+            href="/admin"
+            className="inline-flex items-center rounded-md border border-[#B8977E]/40 px-3 py-1.5 text-[10px] font-medium uppercase tracking-[0.2em] text-[#6B5A4A] transition-colors duration-300 hover:border-[#B8977E] hover:text-[#1C1917]"
+          >
+            Admin
+          </Link>
         </div>
 
         {/* Mobile nav */}
@@ -86,6 +92,13 @@ export function Navbar() {
                   {link.label}
                 </Link>
               ))}
+              <Link
+                href="/admin"
+                onClick={() => setOpen(false)}
+                className="mt-2 inline-flex items-center rounded-md border border-[#B8977E]/40 px-4 py-2 text-[11px] font-medium uppercase tracking-[0.2em] text-[#6B5A4A] transition-colors duration-300 hover:border-[#B8977E] hover:text-[#1C1917]"
+              >
+                Admin
+              </Link>
               <div className="luxury-divider mt-4" />
             </div>
           </SheetContent>
